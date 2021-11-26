@@ -2,13 +2,20 @@
 // where your node app starts
 
 // init project
-require('dotenv').config();
-var express = require('express');
+import dotenv from 'dotenv'
+import express from 'express'
+import cors from 'cors'
+import path from 'path';
+
+import makeExpressCallback from './express-callback/index.js';
+import whoamiController from './whoami/controllers/index.js';
+
+const __dirname = path.resolve();
+dotenv.config()
 var app = express();
 
 // enable CORS (https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
 // so that your API is remotely testable by FCC 
-var cors = require('cors');
 app.use(cors({optionsSuccessStatus: 200}));  // some legacy browsers choke on 204
 
 // http://expressjs.com/en/starter/static-files.html
@@ -26,8 +33,9 @@ app.get("/api/hello", function (req, res) {
 });
 
 
+app.get("/api/whoami", makeExpressCallback(whoamiController));
 
 // listen for requests :)
-var listener = app.listen(process.env.PORT, function () {
+var listener = app.listen(process.env.PORT || 3000, function () {
   console.log('Your app is listening on port ' + listener.address().port);
 });
